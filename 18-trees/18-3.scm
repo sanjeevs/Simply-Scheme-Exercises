@@ -7,21 +7,12 @@
 ; Andy note: This one took me AGES. It's embarressing, but I my brain melts when I try to
 ;            think about trees recursively.
 
-(define (leaf? tree)
-  (null? (children tree)))
-
+; My attempt. Not sure if it works in all cases (:
+; The depth of the tree is 1 if it is a leaf else it is the max of the depth of all the nodes
+; in the forest.
 (define (depth tree)
-  (if (leaf? tree)
-    1
-    (find-depth tree 1)))
+  (depth-helper tree 1))
 
-(define (find-depth tree d)
-  (apply max
-         (cons d
-              (find-depth-in-forest (children tree) (+ 1 d)))))
-
-(define (find-depth-in-forest tree d)
-  (if (null? tree)
-    '()
-    (cons (find-depth (car tree) d)
-          (find-depth-in-forest (cdr tree) d))))
+(define (depth-helper tree level)
+  (if (leaf? tree) level
+      (apply max (every (lambda(x) (depth-helper x (+ level 1))) (children tree)))))
